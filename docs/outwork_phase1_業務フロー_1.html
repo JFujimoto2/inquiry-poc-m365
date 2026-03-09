@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>新システム Phase1 業務フロー図</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f1f5f9;
+    padding: 32px 32px 52px;
+    min-width: 1100px;
+  }
+
+  .header { margin-bottom: 24px; }
+  .header h1 { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .header p  { font-size: 12px; color: #64748b; }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+
+  /* phase header */
+  .th-empty { width: 100px; }
+  .th-arrow { width: 32px; }
+  .th-phase {
+    background: #1e40af;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 6px;
+    letter-spacing: 0.04em;
+  }
+  tr.ph-row th:nth-child(3) { border-radius: 10px 0 0 10px; }
+  tr.ph-row th:last-child   { border-radius: 0 10px 10px 0; }
+
+  /* row label */
+  td.row-label {
+    width: 100px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 12px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.6;
+    border-right: 3px solid #e2e8f0;
+  }
+  td.row-label.customer { color: #1d4ed8; background: #eff6ff; }
+  td.row-label.platform { color: white;   background: #1d6bb5; }
+  td.row-label.staff    { color: #065f46; background: #ecfdf5; }
+
+  /* flow cell */
+  td.flow-cell {
+    vertical-align: top;
+    padding: 14px 6px;
+  }
+
+  .cell-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* box */
+  .box {
+    width: 100%;
+    border-radius: 10px;
+    padding: 9px 10px;
+    font-size: 11.5px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .box small {
+    display: block;
+    font-size: 10px;
+    margin-top: 2px;
+    font-weight: 400;
+    opacity: 0.8;
+  }
+  .box.c { background: white;   border: 2px solid #93c5fd; color: #1e3a8a; }
+  .box.c.dashed { border-style: dashed; }
+  .box.a { background: #dbeafe; border: 2px solid #3b82f6; color: #1e3a8a; }
+  .box.a.green  { background: #d1fae5; border: 2px solid #34d399; color: #064e3b; }
+  .box.a.orange { background: #ffedd5; border: 2px dashed #fb923c; color: #7c2d12; }
+  .box.s { background: white;   border: 2px solid #6ee7b7; color: #065f46; }
+  .box.s.dashed { border-style: dashed; }
+
+  /* tag */
+  .tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 99px;
+    margin-bottom: 3px;
+    letter-spacing: 0.04em;
+  }
+  .tag.auto   { background: #1d4ed8; color: white; }
+  .tag.manual { background: #ea580c; color: white; }
+
+  /* down arrow inside cell */
+  .dn { font-size: 18px; line-height: 1; color: #94a3b8; }
+
+  /* horizontal arrow column */
+  td.arrow-td {
+    width: 32px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0;
+    font-size: 20px;
+  }
+  td.arrow-td.blue  { color: #3b82f6; }
+  td.arrow-td.green { color: #34d399; }
+  td.arrow-td.gray  { color: #cbd5e1; }
+
+  /* vertical arrows row */
+  .v-row td {
+    padding: 5px 0;
+    text-align: center;
+    font-size: 20px;
+    color: #94a3b8;
+    border-right: none;
+  }
+  .v-row td.row-label {
+    background: #f1f5f9;
+    border-right: 3px solid #e2e8f0;
+    font-size: 20px;
+    color: #94a3b8;
+  }
+
+  /* spacer */
+  .sp td { height: 8px; }
+
+  /* badge */
+  .badge {
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-top: 2px;
+  }
+  .badge.ok { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+
+  /* legend */
+  .legend {
+    display: flex;
+    gap: 22px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    color: #475569;
+  }
+  .legend-swatch {
+    width: 32px;
+    height: 14px;
+    border-radius: 4px;
+    border: 2px solid;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>新システム 予約管理 業務フロー図（Phase 1）</h1>
+  <p>Power Platform 移行後の想定フロー ／ 青塗り＝自動化・オレンジ点線＝手動残存</p>
+</div>
+
+<table>
+  <colgroup>
+    <col style="width:100px"><!-- label -->
+    <col style="width:32px"><!-- arrow -->
+    <col><!-- ① -->
+    <col style="width:32px">
+    <col><!-- ② -->
+    <col style="width:32px">
+    <col><!-- ③ -->
+    <col style="width:32px">
+    <col><!-- ④ -->
+    <col style="width:32px">
+    <col><!-- ⑤ -->
+  </colgroup>
+
+  <!-- phase header -->
+  <tr class="ph-row">
+    <th class="th-empty"></th>
+    <th class="th-arrow"></th>
+    <th class="th-phase">① お問合せ</th>
+    <th class="th-arrow"></th>
+    <th class="th-phase">② 接客〜予約決定</th>
+    <th class="th-arrow"></th>
+    <th class="th-phase">③ 諸条件確認・変更</th>
+    <th class="th-arrow"></th>
+    <th class="th-phase">④ 利用</th>
+    <th class="th-arrow"></th>
+    <th class="th-phase">⑤ ご請求</th>
+  </tr>
+  <tr class="sp"><td colspan="11"></td></tr>
+
+  <!-- ===== Row: お客様 ===== -->
+  <tr>
+    <td class="row-label customer">👤<br>お客様</td>
+    <td class="arrow-td gray"></td>
+
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box c">空き状況を確認<small>Power Appsカレンダー</small></div>
+        <div class="dn">↓</div>
+        <div class="box c">希望条件を入力<small>問い合わせフォーム</small></div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box c">見積書を受取<small>自動メール</small></div>
+        <div class="dn">↓</div>
+        <div class="box c">本問い合わせ・予約確定<small>メール or フォーム</small></div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box c dashed">変更連絡<small>メール・電話</small></div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box c">施設利用</div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box c">請求書を受領<small>自動メール</small></div>
+      </div>
+    </td>
+  </tr>
+
+  <!-- vertical arrows -->
+  <tr class="v-row">
+    <td class="row-label"></td>
+    <td></td><td>⇅</td><td></td><td>⇅</td><td></td><td>⇅</td><td></td><td>⇅</td><td></td><td>⇅</td>
+  </tr>
+
+  <!-- ===== Row: Power Platform ===== -->
+  <tr>
+    <td class="row-label platform">⚡<br>Power<br>Platform</td>
+    <td class="arrow-td gray"></td>
+
+    <!-- ① -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box a">
+          <span class="tag auto">自動</span><br>
+          フォーム受付<small>Dataverseへ自動登録</small>
+        </div>
+        <div class="badge ok">✅ Form bridge 代替</div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <!-- ② -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box a">
+          <span class="tag auto">自動</span><br>
+          見積PDF生成<small>Wordテンプレート→PDF変換</small>
+        </div>
+        <div class="dn">↓</div>
+        <div class="box a green">
+          <span class="tag auto">自動</span><br>
+          見積メール送信<small>Outlook（M365テナント）</small>
+        </div>
+        <div class="dn">↓</div>
+        <div class="box a">
+          <span class="tag auto">自動</span><br>
+          スタッフへ通知<small>Teams通知・承認フロー</small>
+        </div>
+        <div class="badge ok">✅ レポトン・Kmailer 代替</div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <!-- ③ -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box a orange">
+          <span class="tag manual">手動</span><br>
+          スタッフがDataverse更新<small>Power Apps管理画面</small>
+        </div>
+        <div class="dn">↓</div>
+        <div class="box a">
+          <span class="tag auto">自動</span><br>
+          変更後の見積を再送信<small>Power Automate</small>
+        </div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <!-- ④ -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box a orange">
+          <span class="tag manual">手動</span><br>
+          aiPassへ入力<small>Phase 3で自動化予定</small>
+        </div>
+      </div>
+    </td>
+
+    <td class="arrow-td blue">→</td>
+
+    <!-- ⑤ -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box a">
+          <span class="tag auto">自動</span><br>
+          請求書PDF生成<br>＆メール送信<small>Power Automate + Outlook</small>
+        </div>
+        <div class="badge ok">✅ レポトン 代替</div>
+      </div>
+    </td>
+  </tr>
+
+  <!-- vertical arrows -->
+  <tr class="v-row">
+    <td class="row-label"></td>
+    <td></td><td>⇅</td><td></td><td>⇅</td><td></td><td>⇅</td><td></td><td>⇅</td><td></td><td>⇅</td>
+  </tr>
+
+  <!-- ===== Row: スタッフ ===== -->
+  <tr>
+    <td class="row-label staff">👩‍💼<br>スタッフ</td>
+    <td class="arrow-td gray"></td>
+
+    <!-- ① -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box s">空き状況を入力<small>Power Appsカレンダー画面</small></div>
+        <div class="dn">↓</div>
+        <div class="box s">問い合わせ通知受取<small>Teams通知</small></div>
+      </div>
+    </td>
+
+    <td class="arrow-td green">→</td>
+
+    <!-- ② -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box s">見積内容を確認・承認<small>Power Apps管理画面</small></div>
+        <div class="dn">↓</div>
+        <div class="box s dashed">必要に応じて電話・メール対応</div>
+      </div>
+    </td>
+
+    <td class="arrow-td green">→</td>
+
+    <!-- ③ -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box s">変更内容を管理画面で更新<small>Power Apps</small></div>
+      </div>
+    </td>
+
+    <td class="arrow-td green">→</td>
+
+    <!-- ④ -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box s">施設対応</div>
+        <div class="dn">↓</div>
+        <div class="box s dashed">aiPass手動入力<small>Phase 3まで継続</small></div>
+      </div>
+    </td>
+
+    <td class="arrow-td green">→</td>
+
+    <!-- ⑤ -->
+    <td class="flow-cell">
+      <div class="cell-inner">
+        <div class="box s">請求書送付を確認<small>Power Apps管理画面</small></div>
+      </div>
+    </td>
+  </tr>
+
+</table>
+
+<!-- legend -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#dbeafe; border-color:#3b82f6;"></div>
+    自動処理（Power Automate）
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#d1fae5; border-color:#34d399;"></div>
+    メール自動送信（Outlook）
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#ffedd5; border-color:#fb923c; border-style:dashed;"></div>
+    手動作業（残存）
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:white; border-color:#93c5fd;"></div>
+    お客様操作
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:white; border-color:#6ee7b7;"></div>
+    スタッフ操作
+  </div>
+  <div class="legend-item">
+    <div style="background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; border-radius:99px; font-size:9.5px; font-weight:700; padding:2px 8px;">✅ kintone代替済</div>
+  </div>
+</div>
+
+</body>
+</html>
