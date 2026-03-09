@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>問い合わせフォーム - 施設予約</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Segoe+UI:wght@400;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', 'Segoe UI', sans-serif;
+    background: #f3f2f1;
+    min-height: 100vh;
+  }
+
+  /* ---- Header ---- */
+  .header {
+    background: #0078d4;
+    color: white;
+    padding: 0 40px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .header-logo-icon {
+    width: 32px;
+    height: 32px;
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .header-nav {
+    display: flex;
+    gap: 24px;
+    font-size: 14px;
+  }
+
+  .header-nav a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .header-nav a.active,
+  .header-nav a:hover {
+    color: white;
+    border-bottom-color: white;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+  }
+
+  .header-right .login-btn {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
+    color: white;
+    padding: 48px 40px 40px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .hero p {
+    font-size: 14px;
+    opacity: 0.85;
+  }
+
+  /* ---- Breadcrumb ---- */
+  .breadcrumb {
+    padding: 12px 40px;
+    font-size: 12px;
+    color: #605e5c;
+    background: #edebe9;
+  }
+
+  .breadcrumb a {
+    color: #0078d4;
+    text-decoration: none;
+  }
+
+  /* ---- Main content ---- */
+  .main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 32px 40px 60px;
+  }
+
+  /* ---- Calendar Section ---- */
+  .section-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.13), 0 0.3px 0.9px rgba(0,0,0,0.1);
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #323130;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: #605e5c;
+    margin-bottom: 20px;
+  }
+
+  /* Calendar */
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .calendar-month {
+    font-size: 16px;
+    font-weight: 600;
+    color: #323130;
+  }
+
+  .calendar-tabs {
+    display: flex;
+    gap: 8px;
+  }
+
+  .calendar-tab {
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1.5px solid #0078d4;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .calendar-tab.active {
+    background: #0078d4;
+    color: white;
+  }
+
+  .calendar-tab:not(.active) {
+    background: white;
+    color: #0078d4;
+  }
+
+  .calendar-nav {
+    display: flex;
+    gap: 8px;
+  }
+
+  .calendar-nav button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #d2d0ce;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #323130;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .cal-day-header {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #605e5c;
+    padding: 8px 0;
+  }
+
+  .cal-day {
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: 4px;
+    font-size: 13px;
+    position: relative;
+    min-height: 52px;
+  }
+
+  .cal-day .date { font-weight: 500; color: #323130; }
+  .cal-day .status {
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 2px;
+    border-radius: 3px;
+    padding: 1px 4px;
+  }
+
+  .cal-day.available { background: #e6f4ea; }
+  .cal-day.available .status { color: #137333; }
+  .cal-day.few { background: #fef7e0; }
+  .cal-day.few .status { color: #b06000; }
+  .cal-day.full { background: #fce8e6; }
+  .cal-day.full .status { color: #c5221f; }
+  .cal-day.past { background: #f3f2f1; }
+  .cal-day.past .date { color: #a19f9d; }
+
+  .cal-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #605e5c;
+  }
+
+  .cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cal-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  /* ---- Form ---- */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group.full {
+    grid-column: 1 / -1;
+  }
+
+  .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #323130;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .required {
+    color: #c5221f;
+    font-size: 12px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    border: 1px solid #8a8886;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #323130;
+    background: white;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: #0078d4;
+    box-shadow: 0 0 0 1px #0078d4;
+  }
+
+  .form-input::placeholder { color: #a19f9d; }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-hint {
+    font-size: 11px;
+    color: #605e5c;
+    margin-top: 4px;
+  }
+
+  /* Checkbox group */
+  .checkbox-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #323130;
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #0078d4;
+  }
+
+  /* Date range */
+  .date-range {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .date-range .form-input { flex: 1; }
+  .date-range .separator { color: #605e5c; font-size: 14px; }
+
+  /* Submit */
+  .form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 20px;
+    border-top: 1px solid #edebe9;
+  }
+
+  .btn-primary {
+    background: #0078d4;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 2px 4px rgba(0,120,212,0.3);
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: #106ebe; }
+
+  .btn-secondary {
+    background: white;
+    color: #323130;
+    border: 1px solid #8a8886;
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Footer */
+  .footer {
+    background: #323130;
+    color: #d2d0ce;
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-logo">
+    <div class="header-logo-icon">🏨</div>
+    施設予約ポータル
+  </div>
+  <div class="header-nav">
+    <a href="#" class="active">お問い合わせ</a>
+    <a href="#">空き状況カレンダー</a>
+    <a href="#">ご利用案内</a>
+    <a href="#">よくある質問</a>
+  </div>
+  <div class="header-right">
+    <button class="login-btn">ログイン / マイページ</button>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>施設ご利用 お問い合わせフォーム</h1>
+  <p>笠間・木更津の施設予約に関するお問い合わせはこちらから</p>
+</div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#">ホーム</a> ＞ <span>お問い合わせ</span>
+</div>
+
+<div class="main">
+
+  <!-- Calendar -->
+  <div class="section-card">
+    <div class="section-title">📅 空き状況カレンダー</div>
+    <div class="section-subtitle">ご希望日の空き状況をご確認のうえ、下のフォームにご入力ください</div>
+
+    <div class="calendar-header">
+      <div class="calendar-tabs">
+        <div class="calendar-tab active">笠間</div>
+        <div class="calendar-tab">木更津</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="calendar-nav"><button>◀</button></div>
+        <div class="calendar-month">2026年 4月</div>
+        <div class="calendar-nav"><button>▶</button></div>
+      </div>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="cal-day-header">月</div>
+      <div class="cal-day-header">火</div>
+      <div class="cal-day-header">水</div>
+      <div class="cal-day-header">木</div>
+      <div class="cal-day-header">金</div>
+      <div class="cal-day-header">土</div>
+      <div class="cal-day-header">日</div>
+
+      <!-- Week 1 -->
+      <div class="cal-day past"><div class="date"></div></div>
+      <div class="cal-day past"><div class="date"></div></div>
+      <div class="cal-day available"><div class="date">1</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">2</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">3</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day few"><div class="date">4</div><div class="status">△ 残少</div></div>
+      <div class="cal-day few"><div class="date">5</div><div class="status">△ 残少</div></div>
+
+      <!-- Week 2 -->
+      <div class="cal-day available"><div class="date">6</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">7</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">8</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day full"><div class="date">9</div><div class="status">✕ 満室</div></div>
+      <div class="cal-day full"><div class="date">10</div><div class="status">✕ 満室</div></div>
+      <div class="cal-day full"><div class="date">11</div><div class="status">✕ 満室</div></div>
+      <div class="cal-day full"><div class="date">12</div><div class="status">✕ 満室</div></div>
+
+      <!-- Week 3 -->
+      <div class="cal-day available"><div class="date">13</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">14</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day few"><div class="date">15</div><div class="status">△ 残少</div></div>
+      <div class="cal-day available"><div class="date">16</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">17</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day few"><div class="date">18</div><div class="status">△ 残少</div></div>
+      <div class="cal-day available"><div class="date">19</div><div class="status">◎ 空き</div></div>
+
+      <!-- Week 4 -->
+      <div class="cal-day available"><div class="date">20</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">21</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">22</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">23</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day few"><div class="date">24</div><div class="status">△ 残少</div></div>
+      <div class="cal-day full"><div class="date">25</div><div class="status">✕ 満室</div></div>
+      <div class="cal-day full"><div class="date">26</div><div class="status">✕ 満室</div></div>
+
+      <!-- Week 5 -->
+      <div class="cal-day available"><div class="date">27</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">28</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">29</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day available"><div class="date">30</div><div class="status">◎ 空き</div></div>
+      <div class="cal-day past"><div class="date"></div></div>
+      <div class="cal-day past"><div class="date"></div></div>
+      <div class="cal-day past"><div class="date"></div></div>
+    </div>
+
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#e6f4ea"></div>◎ 空きあり</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fef7e0"></div>△ 残りわずか</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fce8e6"></div>✕ 満室</div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="section-card">
+    <div class="section-title">📝 お問い合わせ内容</div>
+    <div class="section-subtitle">必要事項をご入力のうえ「送信」ボタンを押してください</div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">会社名・団体名 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="例：株式会社サンプル">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ご担当者名 <span class="required">*</span></label>
+        <input type="text" class="form-input" placeholder="例：山田 太郎">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">メールアドレス <span class="required">*</span></label>
+        <input type="email" class="form-input" placeholder="例：sample@example.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">お電話番号</label>
+        <input type="tel" class="form-input" placeholder="例：03-1234-5678">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ご希望施設 <span class="required">*</span></label>
+        <select class="form-select">
+          <option value="">選択してください</option>
+          <option>笠間</option>
+          <option>木更津</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">参加人数 <span class="required">*</span></label>
+        <input type="number" class="form-input" placeholder="例：20" min="1">
+        <div class="form-hint">概算で構いません</div>
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">ご希望日程 <span class="required">*</span></label>
+        <div class="date-range">
+          <input type="date" class="form-input" value="2026-04-15">
+          <span class="separator">〜</span>
+          <input type="date" class="form-input" value="2026-04-16">
+        </div>
+        <div class="form-hint">チェックイン〜チェックアウトの日付をご入力ください</div>
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">ご希望サービス <span class="required">*</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" checked> 会議室利用</label>
+          <label class="checkbox-item"><input type="checkbox" checked> 食事（昼食）</label>
+          <label class="checkbox-item"><input type="checkbox"> 食事（夕食）</label>
+          <label class="checkbox-item"><input type="checkbox" checked> 宿泊</label>
+          <label class="checkbox-item"><input type="checkbox"> 前泊</label>
+          <label class="checkbox-item"><input type="checkbox"> 懇親会</label>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">備考・ご要望</label>
+        <textarea class="form-textarea" placeholder="その他ご要望がございましたらご記入ください"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-secondary">クリア</button>
+        <button class="btn-primary">送信する</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  © 2026 施設予約ポータル ｜ Powered by Microsoft Power Pages
+</div>
+
+</body>
+</html>
