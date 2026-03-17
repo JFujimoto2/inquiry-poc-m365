@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>新システム Phase1 システム構成図（改訂案）</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Sans:wght@400;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+  }
+
+  h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+  }
+
+  .change-note {
+    font-size: 11px;
+    color: #dc2626;
+    margin-bottom: 24px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 8px 14px;
+    max-width: 720px;
+    line-height: 1.6;
+  }
+
+  .change-note strong { color: #b91c1c; }
+
+  /* ---- Main layout ---- */
+  .main-layout {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ---- Top row: customer + SharePoint page ---- */
+  .top-section {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  /* ---- Bottom row: platform + staff ---- */
+  .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 140px;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  /* ---- Actors ---- */
+  .actor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px;
+    gap: 10px;
+  }
+
+  .actor-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .actor-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .actor-sub {
+    font-size: 10px;
+    color: #6b7280;
+    text-align: center;
+    margin-top: -6px;
+  }
+
+  .actor-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .actor-step {
+    background: white;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: #374151;
+    text-align: center;
+    border: 1.5px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    line-height: 1.4;
+  }
+
+  .actor-step.changed {
+    border-color: #f87171;
+    background: #fff5f5;
+  }
+
+  /* ---- SharePoint page box ---- */
+  .sp-page-box {
+    background: white;
+    border-radius: 20px;
+    border: 2px solid #038387;
+    padding: 20px 20px 24px;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(3,131,135,0.10);
+  }
+
+  .sp-page-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .sp-page-title-badge {
+    background: #038387;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .sp-page-title-note {
+    font-size: 10px;
+    color: #64748b;
+  }
+
+  .sp-page-title-cost {
+    font-size: 10px;
+    color: #16a34a;
+    font-weight: 700;
+    background: #f0fdf4;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+  }
+
+  .sp-page-desc {
+    font-size: 10.5px;
+    color: #64748b;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    background: #f0fdfa;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccfbf1;
+  }
+
+  .sp-page-sections {
+    display: flex;
+    gap: 10px;
+  }
+
+  .sp-section {
+    flex: 1;
+    border-radius: 12px;
+    padding: 14px 14px;
+  }
+
+  .sp-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .sp-section-forms {
+    background: #faf5ff;
+    border: 1.5px solid #e9d5ff;
+  }
+  .sp-section-forms .sp-section-label { color: #7c3aed; }
+
+  .sp-section-list {
+    background: #f0fdfa;
+    border: 1.5px solid #99f6e4;
+  }
+  .sp-section-list .sp-section-label { color: #0d9488; }
+
+  /* ---- Connector arrow between sections ---- */
+  .connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 0;
+  }
+
+  .connector-line {
+    flex: 1;
+    height: 0;
+    border-top: 2px dashed #94a3b8;
+  }
+
+  .connector-label {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 600;
+    white-space: nowrap;
+    background: #f0f4f8;
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1.5px solid #cbd5e1;
+  }
+
+  .connector-arrow {
+    font-size: 14px;
+    color: #64748b;
+  }
+
+  /* ---- Power Platform box ---- */
+  .platform-box {
+    background: white;
+    border-radius: 20px;
+    border: 2px solid #0078d4;
+    padding: 20px 20px 24px;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0,120,212,0.10);
+  }
+
+  .platform-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .platform-title-badge {
+    background: #0078d4;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .platform-title-note {
+    font-size: 10px;
+    color: #64748b;
+  }
+
+  /* ---- Layers inside platform ---- */
+  .layer {
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .layer:last-child { margin-bottom: 0; }
+
+  .layer-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+
+  .layer-apps {
+    background: #f0f7ff;
+    border: 1.5px solid #bfdbfe;
+  }
+
+  .layer-apps .layer-label { color: #1d4ed8; }
+
+  .layer-auto {
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+  }
+
+  .layer-auto .layer-label { color: #166534; }
+
+  .layer-data {
+    background: #fdf4ff;
+    border: 1.5px solid #e9d5ff;
+  }
+
+  .layer-data .layer-label { color: #6b21a8; }
+
+  .layer-sp {
+    background: #f0fdfa;
+    border: 1.5px solid #99f6e4;
+  }
+
+  .layer-sp .layer-label { color: #0d9488; }
+
+  /* ---- Component cards ---- */
+  .components {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .comp {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #1e293b;
+    border: 1.5px solid transparent;
+    line-height: 1.3;
+    background: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .comp-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .comp-text { line-height: 1.3; }
+  .comp-text small {
+    display: block;
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 400;
+  }
+
+  .comp.apps { border-color: #93c5fd; }
+  .comp.auto { border-color: #86efac; }
+  .comp.data { border-color: #d8b4fe; }
+  .comp.sp   { border-color: #5eead4; }
+  .comp.ext  { border-color: #fcd34d; background: #fffbeb; }
+  .comp.forms { border-color: #c084fc; background: #faf5ff; }
+  .comp.changed { border-color: #f87171; border-width: 2px; }
+
+  /* ---- Flow arrows inside platform ---- */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin: 6px 0;
+    font-size: 10px;
+    color: #94a3b8;
+  }
+
+  .flow-arrow { font-size: 16px; }
+
+  /* ---- External services row ---- */
+  .ext-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1.5px dashed #e2e8f0;
+  }
+
+  .ext-label {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  /* ---- Data flow summary ---- */
+  .flow-summary {
+    max-width: 1000px;
+    width: 100%;
+    margin-top: 28px;
+    background: white;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1.5px solid #e2e8f0;
+  }
+
+  .flow-summary h2 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 14px;
+  }
+
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+  }
+
+  .flow-step + .flow-step {
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .flow-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #0078d4;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .flow-num.sp { background: #038387; }
+
+  .flow-detail {
+    flex: 1;
+  }
+
+  .flow-detail-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 2px;
+  }
+
+  .flow-detail-desc {
+    font-size: 11px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  .flow-detail-tech {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+  }
+
+  .tech-forms { background: #faf5ff; color: #7c3aed; }
+  .tech-pa { background: #f0fdf4; color: #166534; }
+  .tech-dv { background: #fdf4ff; color: #6b21a8; }
+  .tech-sp { background: #f0fdfa; color: #0d9488; }
+  .tech-apps { background: #f0f7ff; color: #1d4ed8; }
+
+  /* ---- Cost comparison ---- */
+  .cost-box {
+    max-width: 1000px;
+    width: 100%;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .cost-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1.5px solid #e2e8f0;
+  }
+
+  .cost-card h3 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 10px;
+  }
+
+  .cost-card.current { border-color: #fca5a5; }
+  .cost-card.proposed { border-color: #86efac; }
+
+  .cost-card.current h3::before { content: ""; margin-right: 6px; }
+  .cost-card.proposed h3::before { content: ""; margin-right: 6px; }
+
+  .cost-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 4px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .cost-row:last-child {
+    border-bottom: none;
+    font-weight: 700;
+    padding-top: 8px;
+    margin-top: 4px;
+    border-top: 1.5px solid #e2e8f0;
+  }
+
+  .cost-label { color: #64748b; }
+  .cost-value { color: #1e293b; }
+  .cost-free { color: #16a34a; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Phase 1 システム構成図（改訂案）</h1>
+<p class="subtitle">SharePoint + Forms + Dataverse ハイブリッド構成</p>
+
+<div class="change-note">
+  <strong>変更点：</strong>
+  顧客向け画面を <strong>SharePointページ</strong>（Forms埋め込み + 空き状況リスト）に変更。
+  空き状況データを <strong>SharePointリスト</strong> に分離し、現場がブラウザで直接編集可能に。
+  業務データ（問い合わせ・見積・予約）は <strong>Dataverse</strong> に維持。
+</div>
+
+<div class="main-layout">
+
+  <!-- ======== 上段：顧客向け（SharePoint） ======== -->
+  <div class="top-section">
+
+    <!-- 左：お客様 -->
+    <div class="actor">
+      <div class="actor-icon" style="background:#dbeafe;">👤</div>
+      <div class="actor-label">お客様</div>
+      <div class="actor-sub">（外部・ライセンス不要）</div>
+      <div class="actor-steps">
+        <div class="actor-step changed">① 空き状況を確認<br><small>SharePointリスト表示</small></div>
+        <div class="actor-step changed">② 問い合わせ入力<br><small>Microsoft Forms</small></div>
+        <div class="actor-step">③ 見積書<br>受取・確認</div>
+        <div class="actor-step">④ 予約確定</div>
+      </div>
+    </div>
+
+    <!-- SharePoint ページ -->
+    <div class="sp-page-box">
+      <div class="sp-page-title">
+        <span class="sp-page-title-badge">SharePoint コミュニケーションサイト</span>
+        <span class="sp-page-title-note">顧客向け公開ページ</span>
+        <span class="sp-page-title-cost">追加コスト ¥0（E3に含む）</span>
+      </div>
+
+      <div class="sp-page-desc">
+        顧客に共有するURL 1つで「空き状況の確認 → 問い合わせ送信」が完結。<br>
+        外部共有 or 匿名アクセスリンクで公開（M365ライセンス不要）。
+      </div>
+
+      <div class="sp-page-sections">
+        <!-- Forms セクション -->
+        <div class="sp-section sp-section-forms">
+          <div class="sp-section-label">Microsoft Forms（埋め込み）</div>
+          <div class="components">
+            <div class="comp forms">
+              <span class="comp-icon">📋</span>
+              <div class="comp-text">
+                問い合わせフォーム
+                <small>施設 / 日程 / 人数 / サービス<br>会社名 / 担当者 / 連絡先</small>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:8px; font-size:10px; color:#7c3aed; line-height:1.5;">
+            現場スタッフがブラウザで<br>質問の追加・変更が可能
+          </div>
+        </div>
+
+        <!-- 空き状況リスト セクション -->
+        <div class="sp-section sp-section-list">
+          <div class="sp-section-label">SharePointリスト（埋め込み）</div>
+          <div class="components">
+            <div class="comp sp">
+              <span class="comp-icon">📅</span>
+              <div class="comp-text">
+                空き状況リスト
+                <small>施設 / 日付 / ステータス / 残り枠<br>条件付き書式で色分け表示</small>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:8px; font-size:10px; color:#0d9488; line-height:1.5;">
+            現場スタッフがブラウザで<br>直接リスト編集可能
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /top-section -->
+
+  <!-- ======== 接続矢印 ======== -->
+  <div class="connector">
+    <div class="connector-line"></div>
+    <span class="connector-arrow">⬇️</span>
+    <span class="connector-label">Power Automate が Forms → Dataverse に自動登録</span>
+    <span class="connector-arrow">⬇️</span>
+    <div class="connector-line"></div>
+  </div>
+
+  <!-- ======== 下段：業務システム（Power Platform） ======== -->
+  <div class="bottom-section">
+
+    <!-- Power Platform -->
+    <div class="platform-box">
+      <div class="platform-title">
+        <span class="platform-title-badge">Power Platform（スタッフ用）</span>
+        <span class="platform-title-note">M365 E3 + Power Apps Premium</span>
+      </div>
+
+      <!-- Power Apps layer -->
+      <div class="layer layer-apps">
+        <div class="layer-label">Power Apps -- スタッフ用業務画面</div>
+        <div class="components">
+          <div class="comp apps">
+            <span class="comp-icon">🗂️</span>
+            <div class="comp-text">
+              予約管理画面
+              <small>問い合わせ一覧・ステータス更新<br>見積作成・承認処理</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow arrow -->
+      <div class="flow-row">
+        <span class="flow-arrow">⬇️</span>
+        <span>データ登録・参照</span>
+        <span class="flow-arrow">⬆️</span>
+      </div>
+
+      <!-- Data layer: Dataverse + SharePoint List -->
+      <div style="display:flex; gap:10px;">
+        <!-- Dataverse -->
+        <div class="layer layer-data" style="flex:2;">
+          <div class="layer-label">Dataverse -- 業務データ</div>
+          <div class="components" style="flex-direction:column;">
+            <div class="comp data">
+              <span class="comp-icon">📝</span>
+              <div class="comp-text">
+                問い合わせテーブル
+                <small>顧客情報・希望条件</small>
+              </div>
+            </div>
+            <div class="comp data">
+              <span class="comp-icon">📊</span>
+              <div class="comp-text">
+                見積・予約テーブル
+                <small>金額計算・ステータス遷移</small>
+              </div>
+            </div>
+            <div class="comp data">
+              <span class="comp-icon">👥</span>
+              <div class="comp-text">
+                顧客マスタ
+                <small>取引先・担当者</small>
+              </div>
+            </div>
+            <div class="comp data">
+              <span class="comp-icon">💰</span>
+              <div class="comp-text">
+                料金マスタ
+                <small>サービス種別・単価</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SharePoint List -->
+        <div class="layer layer-sp" style="flex:1;">
+          <div class="layer-label">SharePoint リスト</div>
+          <div class="components" style="flex-direction:column;">
+            <div class="comp sp changed">
+              <span class="comp-icon">📅</span>
+              <div class="comp-text">
+                空き状況リスト
+                <small>施設 / 日付 / ステータス<br>残り枠数</small>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:10px; color:#0d9488; line-height:1.6;">
+            E3に含まれる（追加¥0）<br>
+            スタッフが直接編集可<br>
+            顧客ページにも埋め込み表示
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow arrow -->
+      <div class="flow-row">
+        <span class="flow-arrow">⬇️</span>
+        <span>データ変更をトリガーに自動処理</span>
+      </div>
+
+      <!-- Power Automate layer -->
+      <div class="layer layer-auto">
+        <div class="layer-label">Power Automate -- 自動化フロー</div>
+        <div class="components">
+          <div class="comp auto changed">
+            <span class="comp-icon">📥</span>
+            <div class="comp-text">
+              Forms→Dataverse登録
+              <small>問い合わせ自動取り込み</small>
+            </div>
+          </div>
+          <div class="comp auto">
+            <span class="comp-icon">📄</span>
+            <div class="comp-text">
+              見積PDF自動生成
+              <small>Wordテンプレート→PDF</small>
+            </div>
+          </div>
+          <div class="comp auto">
+            <span class="comp-icon">📧</span>
+            <div class="comp-text">
+              メール自動送信
+              <small>Outlook（M365テナント）</small>
+            </div>
+          </div>
+          <div class="comp auto">
+            <span class="comp-icon">🔔</span>
+            <div class="comp-text">
+              スタッフ通知
+              <small>Teams通知・承認</small>
+            </div>
+          </div>
+          <div class="comp auto changed">
+            <span class="comp-icon">🔄</span>
+            <div class="comp-text">
+              空き枠数自動更新
+              <small>予約確定→SPリスト残数-1</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- External connectors -->
+        <div class="ext-row">
+          <div style="width:100%">
+            <div class="ext-label">接続先（標準コネクタ）</div>
+            <div class="components">
+              <div class="comp ext">
+                <span class="comp-icon">📬</span>
+                <div class="comp-text">Outlook<small>M365テナント</small></div>
+              </div>
+              <div class="comp ext">
+                <span class="comp-icon">💬</span>
+                <div class="comp-text">Teams<small>スタッフ通知</small></div>
+              </div>
+              <div class="comp ext">
+                <span class="comp-icon">📝</span>
+                <div class="comp-text">Word テンプレート<small>見積書</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /platform-box -->
+
+    <!-- 右：スタッフ -->
+    <div class="actor">
+      <div class="actor-icon" style="background:#dcfce7;">👩‍💼</div>
+      <div class="actor-label">現場スタッフ</div>
+      <div class="actor-sub">（E3 + Power Apps Premium）</div>
+      <div class="actor-steps">
+        <div class="actor-step">予約管理画面で<br>確認・ステータス更新</div>
+        <div class="actor-step changed">空き状況を<br>SPリストで直接編集</div>
+        <div class="actor-step changed">Formsフォームを<br>ブラウザで修正</div>
+        <div class="actor-step">Teams通知・<br>承認対応</div>
+      </div>
+    </div>
+
+  </div><!-- /bottom-section -->
+
+</div><!-- /main-layout -->
+
+<!-- ======== データフロー詳細 ======== -->
+<div class="flow-summary">
+  <h2>データフロー（問い合わせ〜予約確定）</h2>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-num sp">1</div>
+      <div class="flow-detail">
+        <div class="flow-detail-title">顧客が空き状況を確認</div>
+        <div class="flow-detail-desc">SharePointページ上の埋め込みリストで施設別の空き状況を閲覧（ログイン不要）</div>
+        <span class="flow-detail-tech tech-sp">SharePoint リスト（表示）</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num sp">2</div>
+      <div class="flow-detail">
+        <div class="flow-detail-title">顧客が問い合わせ送信</div>
+        <div class="flow-detail-desc">同じページ内のMicrosoft Formsで施設・日程・人数・連絡先を入力して送信</div>
+        <span class="flow-detail-tech tech-forms">Microsoft Forms</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-detail">
+        <div class="flow-detail-title">Dataverseに自動登録 + スタッフ通知</div>
+        <div class="flow-detail-desc">Power AutomateがForms回答を検知 → Dataverseの問い合わせテーブルに登録 → Teamsでスタッフに通知</div>
+        <span class="flow-detail-tech tech-pa">Power Automate</span>
+        <span class="flow-detail-tech tech-dv">Dataverse</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="flow-detail">
+        <div class="flow-detail-title">スタッフが見積作成・送付</div>
+        <div class="flow-detail-desc">Power Appsの管理画面で内容確認 → 見積作成 → PDF自動生成 → メール送信</div>
+        <span class="flow-detail-tech tech-apps">Power Apps</span>
+        <span class="flow-detail-tech tech-pa">Power Automate</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div class="flow-detail">
+        <div class="flow-detail-title">予約確定 → 空き枠自動更新</div>
+        <div class="flow-detail-desc">スタッフがステータスを「確定」に変更 → Power AutomateがSharePointリストの残り枠数を自動で-1、ステータス更新</div>
+        <span class="flow-detail-tech tech-pa">Power Automate</span>
+        <span class="flow-detail-tech tech-sp">SharePoint リスト（更新）</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== コスト比較 ======== -->
+<div class="cost-box">
+  <div class="cost-card current">
+    <h3>現行案（全Dataverse）</h3>
+    <div class="cost-row">
+      <span class="cost-label">Power Apps Premium（スタッフ5名）</span>
+      <span class="cost-value">~¥10,000/月</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-label">顧客のフォーム入力</span>
+      <span class="cost-value">Canvas App外部公開（要検証）</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-label">空き状況の現場編集</span>
+      <span class="cost-value">Power Apps経由のみ</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-label">現場でのフォーム修正</span>
+      <span class="cost-value">Canvas App編集スキル必要</span>
+    </div>
+  </div>
+  <div class="cost-card proposed">
+    <h3>改訂案（ハイブリッド）</h3>
+    <div class="cost-row">
+      <span class="cost-label">Power Apps Premium（スタッフ5名）</span>
+      <span class="cost-value">~¥10,000/月</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-label">顧客のフォーム入力</span>
+      <span class="cost-free">Forms（E3に含む・¥0）</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-label">空き状況の現場編集</span>
+      <span class="cost-free">SPリスト直接編集（¥0）</span>
+    </div>
+    <div class="cost-row">
+      <span class="cost-label">現場でのフォーム修正</span>
+      <span class="cost-free">Formsでドラッグ&ドロップ</span>
+    </div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#faf5ff;border:1.5px solid #c084fc"></div>Microsoft Forms</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f0fdfa;border:1.5px solid #5eead4"></div>SharePoint</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe;border:1.5px solid #93c5fd"></div>Power Apps</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#d8b4fe;border:1.5px solid #c084fc"></div>Dataverse</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#bbf7d0;border:1.5px solid #86efac"></div>Power Automate</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fde68a;border:1.5px solid #fcd34d"></div>外部接続</div>
+  <div class="legend-item"><div class="legend-dot" style="background:white;border:2px solid #f87171"></div>変更箇所</div>
+</div>
+
+</body>
+</html>
