@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SharePoint 問い合わせページ イメージ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Segoe+UI:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', 'Segoe UI', sans-serif;
+    background: #f0f4f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+
+  .page-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 6px;
+  }
+
+  .page-subtitle {
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 20px;
+  }
+
+  /* ---- Browser chrome ---- */
+  .browser {
+    width: 100%;
+    max-width: 880px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    overflow: hidden;
+  }
+
+  .browser-bar {
+    background: #f1f5f9;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .browser-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .browser-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .browser-url {
+    flex: 1;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: #64748b;
+    font-family: monospace;
+  }
+
+  /* ---- SharePoint header ---- */
+  .sp-header {
+    background: #038387;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sp-header-logo {
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #038387;
+  }
+
+  .sp-header-text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .sp-header-nav {
+    margin-left: auto;
+    display: flex;
+    gap: 16px;
+  }
+
+  .sp-header-nav a {
+    color: rgba(255,255,255,0.8);
+    font-size: 12px;
+    text-decoration: none;
+  }
+
+  /* ---- Hero banner ---- */
+  .hero {
+    background: linear-gradient(135deg, #065f46 0%, #0d9488 100%);
+    padding: 32px 32px 28px;
+    color: white;
+  }
+
+  .hero h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .hero p {
+    font-size: 13px;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  /* ---- Page content ---- */
+  .sp-content {
+    padding: 28px 32px 40px;
+  }
+
+  /* ---- Section: Availability ---- */
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .section-subtitle {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 1px;
+  }
+
+  /* ---- Facility tabs ---- */
+  .facility-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  .facility-tab {
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+
+  .facility-tab.active {
+    color: #038387;
+    border-bottom-color: #038387;
+  }
+
+  /* ---- Calendar grid ---- */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .cal-header {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    padding: 6px 0;
+  }
+
+  .cal-header.sun { color: #ef4444; }
+  .cal-header.sat { color: #3b82f6; }
+
+  .cal-cell {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 6px 4px;
+    text-align: center;
+    min-height: 52px;
+    background: white;
+  }
+
+  .cal-cell.empty {
+    background: #f9fafb;
+    border-color: transparent;
+  }
+
+  .cal-day {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+  }
+
+  .cal-cell.sun .cal-day { color: #ef4444; }
+  .cal-cell.sat .cal-day { color: #3b82f6; }
+
+  .cal-status {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 0;
+    border-radius: 4px;
+  }
+
+  .cal-status.available {
+    color: #059669;
+    background: #ecfdf5;
+  }
+
+  .cal-status.few {
+    color: #d97706;
+    background: #fffbeb;
+  }
+
+  .cal-status.full {
+    color: #dc2626;
+    background: #fef2f2;
+  }
+
+  .cal-status.past {
+    color: #9ca3af;
+    background: #f3f4f6;
+  }
+
+  .cal-legend {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+  }
+
+  .cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #6b7280;
+  }
+
+  .cal-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  /* ---- Divider ---- */
+  .divider {
+    border: none;
+    border-top: 2px solid #e5e7eb;
+    margin: 32px 0;
+  }
+
+  /* ---- Forms embed area ---- */
+  .forms-embed {
+    background: #faf5ff;
+    border: 2px solid #e9d5ff;
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .forms-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .forms-logo {
+    width: 20px;
+    height: 20px;
+    background: #7c3aed;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: white;
+    font-weight: 700;
+  }
+
+  .forms-badge {
+    font-size: 10px;
+    color: #7c3aed;
+    font-weight: 600;
+  }
+
+  .forms-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 6px;
+  }
+
+  .forms-desc {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  /* ---- Form fields ---- */
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .form-label .required {
+    color: #dc2626;
+    margin-left: 2px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #374151;
+    background: white;
+    font-family: inherit;
+  }
+
+  .form-input::placeholder {
+    color: #9ca3af;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+  }
+
+  .form-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #9ca3af;
+    background: white;
+    font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #374151;
+    background: white;
+    cursor: pointer;
+  }
+
+  .form-checkbox input {
+    accent-color: #7c3aed;
+  }
+
+  .form-checkbox.checked {
+    border-color: #7c3aed;
+    background: #faf5ff;
+  }
+
+  .form-submit-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .form-submit {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .form-note {
+    font-size: 11px;
+    color: #9ca3af;
+    line-height: 1.5;
+  }
+
+  /* ---- Annotation callouts ---- */
+  .annotation {
+    position: relative;
+    margin-top: 20px;
+  }
+
+  .callout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fef3c7;
+    border: 1.5px solid #fcd34d;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 10.5px;
+    color: #92400e;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 4px;
+  }
+
+  .callout-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ---- Footer note ---- */
+  .mockup-footer {
+    max-width: 880px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1.5px solid #e2e8f0;
+  }
+
+  .mockup-footer h3 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 8px;
+  }
+
+  .mockup-footer ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .mockup-footer li {
+    font-size: 11px;
+    color: #64748b;
+    padding: 3px 0;
+    line-height: 1.5;
+  }
+
+  .mockup-footer li::before {
+    content: "- ";
+    color: #9ca3af;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">顧客向け SharePoint ページ - 画面イメージ</div>
+<div class="page-subtitle">「空き状況確認 + 問い合わせフォーム」を1ページに統合</div>
+
+<!-- ======== Browser mockup ======== -->
+<div class="browser">
+
+  <!-- Browser chrome -->
+  <div class="browser-bar">
+    <div class="browser-dots">
+      <div class="browser-dot" style="background:#f87171;"></div>
+      <div class="browser-dot" style="background:#fbbf24;"></div>
+      <div class="browser-dot" style="background:#34d399;"></div>
+    </div>
+    <div class="browser-url">https://contoso.sharepoint.com/sites/facility-booking/inquiry</div>
+  </div>
+
+  <!-- SharePoint global nav -->
+  <div class="sp-header">
+    <div class="sp-header-logo">F</div>
+    <div class="sp-header-text">施設予約ご案内</div>
+    <div class="sp-header-nav">
+      <a href="#">空き状況</a>
+      <a href="#">お問い合わせ</a>
+      <a href="#">アクセス</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>施設予約のご案内</h1>
+    <p>笠間・木更津の施設をご利用いただけます。<br>空き状況をご確認のうえ、下記フォームよりお問い合わせください。</p>
+  </div>
+
+  <!-- Page content -->
+  <div class="sp-content">
+
+    <!-- ===== Section 1: Availability Calendar ===== -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:#ecfdf5;">📅</div>
+        <div>
+          <div class="section-title">空き状況カレンダー</div>
+          <div class="section-subtitle">SharePointリスト埋め込み表示（リアルタイム更新）</div>
+        </div>
+      </div>
+
+      <!-- Facility tabs -->
+      <div class="facility-tabs">
+        <div class="facility-tab active">笠間</div>
+        <div class="facility-tab">木更津</div>
+      </div>
+
+      <!-- Calendar legend -->
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#ecfdf5; border:1px solid #059669;"></div>空きあり</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fffbeb; border:1px solid #d97706;"></div>残りわずか</div>
+        <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fef2f2; border:1px solid #dc2626;"></div>満室</div>
+      </div>
+
+      <!-- Calendar: April 2026 -->
+      <div class="calendar-grid">
+        <!-- Headers -->
+        <div class="cal-header sun">日</div>
+        <div class="cal-header">月</div>
+        <div class="cal-header">火</div>
+        <div class="cal-header">水</div>
+        <div class="cal-header">木</div>
+        <div class="cal-header">金</div>
+        <div class="cal-header sat">土</div>
+
+        <!-- Week 1 -->
+        <div class="cal-cell empty"></div>
+        <div class="cal-cell empty"></div>
+        <div class="cal-cell empty"></div>
+        <div class="cal-cell">
+          <div class="cal-day">1</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">2</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">3</div>
+          <div class="cal-status few">残少</div>
+        </div>
+        <div class="cal-cell sat">
+          <div class="cal-day">4</div>
+          <div class="cal-status full">満室</div>
+        </div>
+
+        <!-- Week 2 -->
+        <div class="cal-cell sun">
+          <div class="cal-day">5</div>
+          <div class="cal-status full">満室</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">6</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">7</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">8</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">9</div>
+          <div class="cal-status few">残少</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">10</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell sat">
+          <div class="cal-day">11</div>
+          <div class="cal-status full">満室</div>
+        </div>
+
+        <!-- Week 3 -->
+        <div class="cal-cell sun">
+          <div class="cal-day">12</div>
+          <div class="cal-status few">残少</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">13</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">14</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">15</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">16</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">17</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell sat">
+          <div class="cal-day">18</div>
+          <div class="cal-status few">残少</div>
+        </div>
+
+        <!-- Week 4 -->
+        <div class="cal-cell sun">
+          <div class="cal-day">19</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">20</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">21</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">22</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">23</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">24</div>
+          <div class="cal-status few">残少</div>
+        </div>
+        <div class="cal-cell sat">
+          <div class="cal-day">25</div>
+          <div class="cal-status full">満室</div>
+        </div>
+
+        <!-- Week 5 -->
+        <div class="cal-cell sun">
+          <div class="cal-day">26</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">27</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">28</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">29</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell">
+          <div class="cal-day">30</div>
+          <div class="cal-status available">空き</div>
+        </div>
+        <div class="cal-cell empty"></div>
+        <div class="cal-cell empty"></div>
+      </div>
+
+      <div class="annotation">
+        <span class="callout"><span class="callout-icon">👩‍💼</span> 現場スタッフがSharePointリストを直接編集 → ここに即反映</span>
+        <span class="callout"><span class="callout-icon">🔄</span> 予約確定時にPower Automateで残枠を自動更新</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ===== Section 2: Inquiry Form (Forms embed) ===== -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon" style="background:#faf5ff;">📋</div>
+        <div>
+          <div class="section-title">施設利用お問い合わせ</div>
+          <div class="section-subtitle">Microsoft Forms 埋め込み</div>
+        </div>
+      </div>
+
+      <div class="forms-embed">
+        <div class="forms-header">
+          <div class="forms-logo">F</div>
+          <span class="forms-badge">Microsoft Forms</span>
+        </div>
+        <div class="forms-title">施設利用お問い合わせフォーム</div>
+        <div class="forms-desc">下記項目をご入力のうえ、送信ボタンを押してください。<br>担当者より2営業日以内にご連絡いたします。</div>
+
+        <!-- Facility selection -->
+        <div class="form-group">
+          <label class="form-label">ご利用施設<span class="required">*</span></label>
+          <select class="form-select">
+            <option>施設を選択してください</option>
+          </select>
+        </div>
+
+        <!-- Date range -->
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label class="form-label">利用開始日<span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="2026/04/10">
+            </div>
+            <div>
+              <label class="form-label">利用終了日<span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="2026/04/12">
+            </div>
+          </div>
+        </div>
+
+        <!-- Participants -->
+        <div class="form-group">
+          <label class="form-label">参加人数<span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="例: 30" style="max-width:200px;">
+        </div>
+
+        <!-- Services -->
+        <div class="form-group">
+          <label class="form-label">ご利用希望サービス<span class="required">*</span></label>
+          <div class="form-checkbox-group">
+            <label class="form-checkbox checked"><input type="checkbox" checked> 会議室</label>
+            <label class="form-checkbox"><input type="checkbox"> 宿泊</label>
+            <label class="form-checkbox checked"><input type="checkbox" checked> 食事（昼食）</label>
+            <label class="form-checkbox"><input type="checkbox"> 食事（夕食）</label>
+            <label class="form-checkbox"><input type="checkbox"> 食事（朝食）</label>
+            <label class="form-checkbox"><input type="checkbox"> 事前搬入</label>
+          </div>
+        </div>
+
+        <!-- Company info -->
+        <div class="form-group">
+          <label class="form-label">会社名<span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="例: 株式会社サンプル">
+        </div>
+
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label class="form-label">ご担当者名<span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="例: 担当者さん">
+            </div>
+            <div>
+              <label class="form-label">ご担当者メールアドレス<span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="例: sample@example.com">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">電話番号</label>
+          <input type="text" class="form-input" placeholder="例: 03-1234-5678" style="max-width:300px;">
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group">
+          <label class="form-label">備考・ご要望</label>
+          <textarea class="form-input" rows="3" placeholder="その他ご要望がございましたらご記入ください"></textarea>
+        </div>
+
+        <!-- Submit -->
+        <div class="form-submit-row">
+          <button class="form-submit">送信</button>
+          <span class="form-note">送信後、確認メールが自動送信されます。</span>
+        </div>
+      </div>
+
+      <div class="annotation">
+        <span class="callout"><span class="callout-icon">👩‍💼</span> 現場スタッフがFormsの編集画面で質問の追加・変更・並び替え可能（ドラッグ&ドロップ）</span>
+        <span class="callout"><span class="callout-icon">⚡</span> 送信 → Power Automate → Dataverseに自動登録 + Teams通知</span>
+      </div>
+    </div>
+
+  </div><!-- /sp-content -->
+
+</div><!-- /browser -->
+
+<!-- ======== 実装メモ ======== -->
+<div class="mockup-footer">
+  <h3>実装メモ</h3>
+  <ul>
+    <li>SharePointコミュニケーションサイトの「ページ」機能で作成（1ページに2つのWebパーツを配置）</li>
+    <li>上部：リストWebパーツ（空き状況SharePointリスト。ビュー書式設定JSONで色分け表示）</li>
+    <li>下部：Microsoft Forms Webパーツ（問い合わせフォームの埋め込み）</li>
+    <li>外部共有：SharePointの外部共有設定 or 匿名アクセスリンクで公開（M365ライセンス不要）</li>
+    <li>カレンダー表示は実際にはSharePointリストのビュー。このモックアップはイメージ。実装時はリストビューの書式設定で近い見た目を実現</li>
+    <li>施設タブ切り替えはリストのフィルタービューで対応</li>
+  </ul>
+</div>
+
+</body>
+</html>
